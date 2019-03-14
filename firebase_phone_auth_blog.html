@@ -1,0 +1,267 @@
+<html lang=en>
+
+
+
+
+
+<p><strong>Table of Contents:</strong></p>
+
+<ol>  
+<li><a href='#demo'>Demo</a></li>        
+<li><a href='#introduction'>Introduction</a></li>
+<li><a href='#what-is-firebase'>What is Firebase ?</a></li>
+
+<li>
+An Example:
+<br>
+<ol>
+
+<li><a href='#SampleApp'>Sample App</a></li>
+<li><a href='#SetupFirebase'>Setup Firebase</a></li>
+<li><a href='#AddingPermissions'>Adding Permissions</a></li>
+<li><a href='#DesigningLayout'>Designing Layout</a></li>
+<li><a href = '#SettingUpMainActivity'>Setting Up MainActivity</a></li>
+<li><a href='#SendVerificationCode'>Send Verification Code</a></li>
+<li><a href='#SettingUpOtpActivity'>Setting Up OtpActivity</a></li>
+<li><a href='#VerifyOtp'>Verify Otp</a></li>
+<li><a href='#SettingUpHomeActivity'>Setting Up HomeActivity</a></li>
+
+
+
+</ol>
+</ol>
+</li>
+</ul>
+<br>
+<br><br>
+
+<h3 id='demo'>Demo</h3>
+<br>
+
+ <img src="H:\Blogs stuff\FirebaseAuthBlogData\blogGif.gif"> 
+
+<br><br><br>
+
+
+
+
+
+<h3 id='introduction'>Introduction</h3>
+<br>
+In this blog I'm going to show you how to use Phone Authentication using Firebase in Android.<br><br><br>
+
+
+
+<h3 id='what-is-firebase'>What is Firebase ?</h3>
+<br>
+Firebase is a Google's mobile platform which provides backend services like database , storage , authentication etc. Firebase supports
+authentication using email , phone number , Google , Twitter and many more. In this blog we will be covering the Phone Authentication only. 
+
+<br><br><br>
+
+
+
+<h3 id='SampleApp'>Sample App</h3>
+<br>
+We will build a simple app which contains three activities :
+<ul>
+<li><b>MainActivity: </b>In this activity user will enter his/her phone Number</li>
+<br>
+<li><b>OtpActivity: </b>In this activity user will enter the otp received on his/her phone for verification.</li>
+<br>
+<li><b>HomeActivity: </b>After user is successfully logged in then this activity will be displayed.</li>
+<br>
+</ul>
+<br>
+Enough of theory , Let's begin the code.
+<br><br><br>
+
+
+<h3 id='SetupFirebase'>Setup Firebase</h3>
+<br>
+To setup Firebase in your Android project , you need to follow these steps :
+<ul>
+<li>Open <a href="https://console.firebase.google.com/" target = "_blank" rel = "nofollow">FirebaseConsole</a> and login to your account.</li>
+<br><br>
+<li>On welcome screen , Click on "Add project" option. 
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\add_project.png">
+</div>
+</li>
+<br><br>
+<li>After clicking on "Add Project" option following project window will open , in this enter your project name and your country and then click on "CREATE PROJECT" button.
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\project_window.png">
+</div>
+</li>
+<br><br>
+<li>
+After this your project's dashboard will open from here click on "Add Firebase to your Android project".
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\add_firebase_to_android.png">
+</div>
+</li>
+<br><br>
+<li>After clicking on "Android icon" you need to register your app by providing the app package name and SHA-1 signing certificate.
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\register_app.png">
+</div>
+</li>
+<br><br>
+<li>To get the app's package name , open AndroidManifest.xml file and on the top there is a package name mentioned.
+<br><br>
+
+<script src="https://gist.github.com/Manik1094/8cffa53d4ee0ce8ed9326a7e7210cc03.js"></script>
+</li>
+<br><br>
+
+<li>To get the SHA-1 certificate , click on "Gradle" tab on right side on Android studio then click on "app" -> "android" -> double click on "signing report". In monitor pane you will get your SHA-1 certificate.
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\sha1.png">
+</div>
+</li>
+<br><br>
+<li>After clicking on "Register App" button you have to download "google-services.json" file and paste it in app module.
+<br><br>
+<div class="row  justify-content-center">
+    <img class="img-fluid text-center" src = "H:\Blogs stuff\FirebaseAuthBlogData\dimensioned_images\googleservices_json.png">
+</div>
+</li>
+<br><br>
+<li>
+Now , open Project level build.gradle file and add the following code under dependencies section.
+<br><br>
+<script src="https://gist.github.com/Manik1094/65d739696ddf44995f609f9b70c23a76.js"></script>
+</li>
+<br><br>
+<li>Open app level build.gradle file and add the following code under dependencies section.
+<br><br>
+<script src="https://gist.github.com/Manik1094/e51bc30dd5f810ccd629e95df8fc800f.js"></script>
+</li>
+<br><br>
+<li>
+Now , go back to Firebase console and click on "Project Overview" . In "Discover Firebase" section click on "Authentication" then on next 
+page click on "Setup Sign in method and enable phone authentication and save it."
+</li>
+<br><br>
+</ul>
+<br><br>
+That's all we are done with the initial setup.
+
+<br><br><br>
+
+<h3 id='AddingPermissions'>Adding Permissions</h3>
+<br>
+Open AndroidManifest.xml file and add the following code , We need Internet permission for sending otp.
+<br><br>
+<script src="https://gist.github.com/Manik1094/72361379b5151cef89b9130e98c3f9fe.js"></script>
+<br><br><br>  
+
+<h3 id='DesigningLayout'>Designing Layout</h3>
+<br>
+Open activity_main.xml file and add the following code , This contains one editText for entering phone number , button for sending otp and
+one progress bar.
+<br><br>
+<script src="https://gist.github.com/Manik1094/2098cc7099acb3d385eaec68938d7622.js"></script>
+<br><br><br> 
+
+<h3 id='SettingUpMainActivity'>Setting Up MainActivity</h3>
+<br>
+Open MainActivity.java file and add the following code . We are creating objects of our UI elements and finding the reference to all of the objects using findViewById() method.
+<br><br>
+<script src="https://gist.github.com/Manik1094/ccaad046394760aa83472f613d74aa1c.js"></script>
+<br><br><br>
+
+<h3 id='SendVerificationCode'>Send Verification Code</h3>
+<br>
+Open MainActivity.java file and add the following code . On Click of button first retreive the text from editText and pass this string to our custom method called "sendVerificationCode()".
+<br><br>
+<b>What is PhoneAuthProvider ?</b>
+<br><br>
+PhoneAuthProvider is a class which represents the whole mechanism for phone authentication and it also provides some methods and callback functions such as "verifyPhoneNumber()".
+<br><br>
+<b>What is verifyPhoneNumber() ?</b>
+<br><br>
+verifyPhoneNumber is a function which starts the phone number verification process , this takes following arguments :
+<br><br>
+<ul>
+<li><b>phoneNumber: </b> User's phone number for which verification has to be start.</li><br>
+<li><b>timeout: </b> Timeout duration of verification code or otp.</li><br>
+<li><b>unit: </b>Unit of timeout , can be in seconds , milliseconds etc.</li><br>
+<li><b>activity or context: </b>Context from where the method is called.</li><br>
+<li><b>OnVerificationStateChangedCallbacks: </b>Instanc of OnVerificationStateChangedCallbacks which contains the callback functions that handle the result of request.</li><br>
+</ul>
+<br><br>
+<b>OnVerificationStateChangedCallbacks </b>
+<br><br>
+This is an abstract class which contains some callback functions for different phone auth events . It is mandatory to provide implementation of two callback functions . Following callback functions can be used :
+<br><br>
+<ul>
+<li><b>onVerificationCompleted: </b>Called when verification is donw without user interaction , ex- when user is verified withot code.</li><br>
+<li><b>onVerificationFailed: </b>Called when some error occured such as failing of sending SMS or Number format exception.</li><br>
+<li><b>onCodeSent: </b>Called when verification code is successfully sent to the phone number.</li><br>
+</ul>
+<br><br>
+On Click of button we are calling our "sendVerificationCode" function which will be responsible for sending sms to user's phone number , when onCodeSent() is triggered the control will be transferred to OtpActivity where we can verify the SMS.
+<br><br>
+
+<script src="https://gist.github.com/Manik1094/914342cc4dadfc45d02af88783564dea.js"></script>
+<br><br><br>
+
+<h3 id='SettingUpOtpActivity'>Setting Up OtpActivity</h3>
+<br>
+<p>Now , create new empty activity named OtpActivity and add the following code inside this file and for the layout add the xml code in activity_otp.xml file.</p>
+<p>OtpActivity layout contains one editText for otp , one button for verifying the otp and one progress bar.</p>
+<p>In OtpActivity.java file we are receiving intent and verificationId from MainActivity , verificationId is required for PhoneAuthCredential object.</p>
+<br><br>
+<script src="https://gist.github.com/Manik1094/53218837ab154d88ba49ba1c11f24e01.js"></script>
+<br><br>
+<script src="https://gist.github.com/Manik1094/ada2fc1da5b740f7e6f838d538d50119.js"></script>
+<br><br><br>
+
+<h3 id='VerifyOtp'>Verify Otp</h3>
+<br>
+Open OtpActivity.java file and add the following code , on click of a button we are calling our custom method named "verifyOtp".
+<br><br>
+<b>What is PhoneAuthCredential ?</b>
+<br><br>
+PhoneAuthCredential is a class which wraps the phone number and other verification information such as verificationId to create a credential and then this credential is passed to another method named "signInWithCredential".
+<br><br>
+<b>What is signInWithCredential ?</b>
+<br><br>
+signInWithCredential is a function which is used to sign in the user based on the credential it receives , then we can attach the "onCompleteListener" to this method
+so that based on the result whether it's success of failure we can perform our operations in this case sending an intent to HomeActivity when user is successfully signed in and
+displaying the toast in case of any errors.
+<br><br>
+<script src="https://gist.github.com/Manik1094/3e361a6d83cf88f75b7a861c6dc54420.js"></script>
+<br><br><br>
+
+<h3 id='SettingUpHomeActivity'>Setting Up HomeActivity</h3>
+<br>
+Now , create new empty activity named HomeActivity and add the following code inside this file and for the layout add the xml code in activity_home.xml file . Layout contains only onw Welcome text.
+<br><br>
+<script src="https://gist.github.com/Manik1094/25ef6e5e31a86a10ad2dee6daf45c0c8.js"></script>
+<br><br>
+<script src="https://gist.github.com/Manik1094/d1123593007e8064ffd5912c916333bf.js"></script>
+<br><br><br>
+
+
+
+
+That's All! Happy Coding!
+<br><br><br>
+
+
+The complete code is available <a href="https://github.com/Manik1094/FirebasePhoneAuth" target="_blank" rel="nofollow">here</a>.
+<br><br><br>
+
+
+
+
+
+</html>
